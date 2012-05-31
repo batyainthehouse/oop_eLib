@@ -68,7 +68,7 @@ public class Server extends JFrame
             ServerSocket ss = new ServerSocket(PORT);
             while (true) {
                 Socket s = ss.accept();
-                ServerModel sm = new ServerModel(s);
+                ServerModel sm = new ServerModel(s, sqlProperties);
                 sm.start();
             }
         } catch (Exception e) {
@@ -165,11 +165,16 @@ public class Server extends JFrame
     private void saveBook(Book book)
     {
         try {
-            // genre
             int genreId = getEntryId("genre", "name", book.genre, true);
             int authorId = getEntryId("author", "name", book.author, true);
             
-
+            String query = "INSERT INTO book(id_genre, id_author, name, text) values(?, ?, ?, ?)";
+            PreparedStatement ps = conn_.prepareStatement(query);
+            ps.setInt(1, genreId);
+            ps.setInt(2, authorId);
+            ps.setString(3, book.name);
+            ps.setString(4, book.text);
+            ps.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -183,9 +188,10 @@ public class Server extends JFrame
             + "id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,"
             + "id_genre INTEGER NOT NULL,"
             + "id_author INTEGER NOT NULL,"
+            + "name TEXT,"    
             + "text TEXT,"
-            + "date DATE,"
-            + "views INTEGER) CHARACTER SET utf8;",
+            + "date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
+            + "views INTEGER DEFAULT 0) CHARACTER SET utf8;",
             "CREATE TABLE IF NOT EXISTS genre("
             + "id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,"
             + "name TEXT) CHARACTER SET utf8;",

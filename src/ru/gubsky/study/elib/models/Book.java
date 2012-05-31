@@ -16,5 +16,6 @@ public class Book
     public String name;
     public String genre;
     public Date date;
-    public int popularity;
+    public int popularity = 0;
+    public String text = "";
 }
