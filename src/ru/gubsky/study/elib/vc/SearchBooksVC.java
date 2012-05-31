@@ -71,6 +71,7 @@ public class SearchBooksVC
             {
                 String searchText = getView().getSearchTf().getText();
                 ArrayList<Book> bukz = model_.getBooksBySearching(searchText);
+                
             }
         };
         return al;
