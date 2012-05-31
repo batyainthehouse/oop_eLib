@@ -4,6 +4,7 @@
  */
 package ru.gubsky.study.elib;
 
+import ru.gubsky.study.elib.models.ClientModel;
 import ru.gubsky.study.elib.vc.SearchBooksVC;
 
 /**
@@ -14,6 +15,5 @@ public class Client
     public static void main(String[] args)
     {
         SearchBooksVC sb = new SearchBooksVC(new ClientModel());
-        sb.setVisible(true);
     }
 }

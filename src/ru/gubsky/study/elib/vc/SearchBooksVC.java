@@ -8,14 +8,14 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import ru.gubsky.study.elib.ClientModel;
+import ru.gubsky.study.elib.models.ClientModel;
 import ru.gubsky.study.elib.views.SearchBooksView;
 
 /**
 
  @author GG
  */
-public class SearchBooksVC extends JFrame
+public class SearchBooksVC
 {
     // use directly
     private ClientModel model_;
@@ -25,8 +25,8 @@ public class SearchBooksVC extends JFrame
     
     public SearchBooksVC(ClientModel model)
     {
-        super();
         model_ = model;
+        getView().getGenreList_().setListData(model.getGenres());
     }
 
     private ChangeListener tabChangeListener()
@@ -48,9 +48,11 @@ public class SearchBooksVC extends JFrame
     
     private SearchBooksView getView()
     {
+        System.out.println("getView");
         if (view_ == null) {
             view_ = new SearchBooksView();
             view_.setTabChangeListener(tabChangeListener());
+            view_.setVisible(true);
         }
         return view_;
     }
