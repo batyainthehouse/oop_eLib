@@ -7,8 +7,11 @@ package ru.gubsky.study.elib.views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
+import ru.gubsky.study.elib.models.Book;
+import ru.gubsky.study.elib.models.BookTableModel;
 
 /**
 
@@ -24,16 +27,24 @@ public class SearchBooksView extends JFrame
     private JPanel popularPanel_;
     private JPanel noveltyPanel_;
     private JTabbedPane tabbedPane_;
-  
     private ChangeListener tabChangeListener_;
+    private JTable popBukzTable_;
+
+    private JTable getPopBukzTable()
+    {
+        if (popBukzTable_ == null) {
+            popBukzTable_ = new JTable();
+        }
+        return popBukzTable_;
+    }
 
     public void setTabChangeListener(ChangeListener tabChangeListener)
     {
         getTabbedPane_().removeChangeListener(this.tabChangeListener_);
         this.tabChangeListener_ = tabChangeListener;
         getTabbedPane_().addChangeListener(this.tabChangeListener_);
-    }   
-    
+    }
+
     public JList getAuthorsList_()
     {
         if (authorsList_ == null) {
@@ -82,6 +93,9 @@ public class SearchBooksView extends JFrame
     {
         if (popularPanel_ == null) {
             popularPanel_ = new JPanel();
+            JScrollPane scrollPane = new JScrollPane(getPopBukzTable());
+            getPopBukzTable().setFillsViewportHeight(true);
+            popularPanel_.add(scrollPane);
         }
         return popularPanel_;
     }
@@ -93,7 +107,7 @@ public class SearchBooksView extends JFrame
             tabbedPane_.addTab("Жанры", null, getGenrePanel_(), "Показать жанры");
             tabbedPane_.addTab("Авторы", getAuthorsPanel_());
             tabbedPane_.addTab("Популярное", getPopularPanel_());
-            tabbedPane_.addTab("Новинки", getNoveltyPanel_());            
+            tabbedPane_.addTab("Новинки", getNoveltyPanel_());
         }
         return tabbedPane_;
     }
@@ -102,7 +116,7 @@ public class SearchBooksView extends JFrame
     {
         super();
         createGui();
-    }    
+    }
 
     private void createGui()
     {
@@ -129,5 +143,10 @@ public class SearchBooksView extends JFrame
         searchPanel.add(searchButton);
 
         return searchPanel;
+    }
+
+    public void updatePopular(BookTableModel bookTableModel)
+    {
+        getPopBukzTable().setModel(bookTableModel);
     }
 }

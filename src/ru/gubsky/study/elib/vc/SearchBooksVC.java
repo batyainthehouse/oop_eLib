@@ -8,6 +8,7 @@ import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import ru.gubsky.study.elib.models.BookTableModel;
 import ru.gubsky.study.elib.models.ClientModel;
 import ru.gubsky.study.elib.views.SearchBooksView;
 
@@ -42,10 +43,17 @@ public class SearchBooksVC
                 switch(index) {
                     case 0:
                         getView().getGenreList_().setListData(model_.getGenres());
+                        break;
                     case 1:
                         getView().getAuthorsList_().setListData(model_.getAuthors());
+                        break;
                     case 2:
+                        BookTableModel bookModel = new BookTableModel(model_.getPopularBook(0, 100));
+                        getView().updatePopular(bookModel);
+                        
+                        break;
                     case 3:
+                        break;
                 }
                 //model_.getGenres();
             }
