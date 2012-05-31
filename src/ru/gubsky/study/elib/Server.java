@@ -67,9 +67,7 @@ public class Server extends JFrame
             System.out.println("Server is running");
             ServerSocket ss = new ServerSocket(PORT);
             while (true) {
-                System.out.println("Server: перед принятием");
                 Socket s = ss.accept();
-                System.out.println("Server : чтото принято");
                 ServerModel sm = new ServerModel(s, sqlProperties);
                 sm.start();
             }
@@ -102,7 +100,7 @@ public class Server extends JFrame
 
         this.add(topPanel);
 
-        this.add(new JLabel("Текст"));  
+        this.add(new JLabel("Текст"));
         taText_ = new JTextArea(50, 20);
         JScrollPane scrollPane = new JScrollPane(taText_);
         this.add(scrollPane);
@@ -169,7 +167,7 @@ public class Server extends JFrame
         try {
             int genreId = getEntryId("genre", "name", book.genre, true);
             int authorId = getEntryId("author", "name", book.author, true);
-            
+
             String query = "INSERT INTO book(id_genre, id_author, name, text) values(?, ?, ?, ?)";
             PreparedStatement ps = conn_.prepareStatement(query);
             ps.setInt(1, genreId);
@@ -190,7 +188,7 @@ public class Server extends JFrame
             + "id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,"
             + "id_genre INTEGER NOT NULL,"
             + "id_author INTEGER NOT NULL,"
-            + "name TEXT,"    
+            + "name TEXT,"
             + "text TEXT,"
             + "date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,"
             + "views INTEGER DEFAULT 0) CHARACTER SET utf8;",

@@ -43,7 +43,6 @@ public class SearchBooksVC
             {
                 JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
                 int index = sourceTabbedPane.getSelectedIndex();
-                System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
                 switch (index) {
                     case 0:
                         getView().getGenreList_().setListData(model_.getGenres());
@@ -79,7 +78,6 @@ public class SearchBooksVC
 
     private SearchBooksView getView()
     {
-        System.out.println("getView");
         if (view_ == null) {
             view_ = new SearchBooksView();
             view_.setTabChangeListener(tabChangeListener());

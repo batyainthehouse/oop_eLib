@@ -26,7 +26,6 @@ public class ServerModel extends Thread
     public ServerModel(Socket s, Properties sqlProperties) throws SQLException
     {
         sock_ = s;
-        System.out.println("ServerModel: ServerModel");
         String host = sqlProperties.getProperty("server");
         String port = sqlProperties.getProperty("port");
         String login = sqlProperties.getProperty("user");
@@ -47,12 +46,9 @@ public class ServerModel extends Thread
 
     public void run()
     {
-        System.out.println("ServerModel: run");
         try {
             ObjectInputStream inStream = new ObjectInputStream(sock_.getInputStream());
-            System.out.println("Servermodel available: " + inStream.available());
             int op = inStream.readInt();
-            System.out.println("sm: operation = " + op);
             Object outObj = null;
             switch (op) {
                 case OPERATION_SEARCH:
@@ -61,14 +57,12 @@ public class ServerModel extends Thread
                 default:
                     break;
             }
-            System.out.println("out obj: " + outObj);
             ObjectOutputStream outStream = new ObjectOutputStream(sock_.getOutputStream());
             outStream.writeObject(outObj);
             sleep(1000);
             inStream.close();
             outStream.close();
             sock_.close();
-            System.out.println("socket close");
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -86,7 +80,6 @@ public class ServerModel extends Thread
         while (rs.next()) {
             Book book = new Book();
             book.author = rs.getString("author");
-            System.out.println(book.author);
             book.genre = rs.getString("genre");
             book.date = rs.getDate("date");
             book.name = rs.getString("title");

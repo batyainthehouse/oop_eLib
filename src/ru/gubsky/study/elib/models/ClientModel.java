@@ -81,7 +81,6 @@ public class ClientModel
         
         ArrayList<Book> bukz = null;
         try {
-            System.out.println("Client: send search text: " + text);
             Socket sock = new Socket(HOST, PORT);
             
             // write
@@ -90,15 +89,9 @@ public class ClientModel
             outStream.writeObject(text);
             outStream.flush();
             
-            System.out.println("Client: записано");
-            
             // read
             ObjectInputStream inStream = new ObjectInputStream(sock.getInputStream());
-            System.out.println("Client: ololo");
-            System.out.println(inStream.available());
             bukz = (ArrayList<Book>) inStream.readObject();
-            
-            System.out.println("Прочитано");
             
             inStream.close();
             outStream.close();
