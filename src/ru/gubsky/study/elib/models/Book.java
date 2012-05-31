@@ -4,13 +4,14 @@
  */
 package ru.gubsky.study.elib.models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
 
  @author GG
  */
-public class Book
+public class Book implements Serializable
 {
     public String author;
     public String name;

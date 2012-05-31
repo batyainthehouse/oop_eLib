@@ -17,7 +17,7 @@ import java.util.Date;
 public class ClientModel
 {
     final static String HOST = "localhost";
-    final static int PORT = 5555;
+    final static int PORT = 15755;
     final static int OPERATION_SEARCH = 1;
     
     public String[] getGenres()
@@ -87,11 +87,19 @@ public class ClientModel
             // write
             ObjectOutputStream outStream = new ObjectOutputStream(sock.getOutputStream());
             outStream.writeInt(OPERATION_SEARCH);
-            outStream.writeChars(text);
+            outStream.writeObject(text);
+            outStream.flush();
+            
+            System.out.println("Client: записано");
             
             // read
             ObjectInputStream inStream = new ObjectInputStream(sock.getInputStream());
+            System.out.println("Client: ololo");
+            System.out.println(inStream.available());
             bukz = (ArrayList<Book>) inStream.readObject();
+            
+            System.out.println("Прочитано");
+            
             inStream.close();
             outStream.close();
             sock.close();

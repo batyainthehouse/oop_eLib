@@ -26,7 +26,7 @@ public class ServerModel extends Thread
     public ServerModel(Socket s, Properties sqlProperties) throws SQLException
     {
         sock_ = s;
-
+        System.out.println("ServerModel: ServerModel");
         String host = sqlProperties.getProperty("server");
         String port = sqlProperties.getProperty("port");
         String login = sqlProperties.getProperty("user");
@@ -47,9 +47,10 @@ public class ServerModel extends Thread
 
     public void run()
     {
+        System.out.println("ServerModel: run");
         try {
             ObjectInputStream inStream = new ObjectInputStream(sock_.getInputStream());
-            ObjectOutputStream outStream = new ObjectOutputStream(sock_.getOutputStream());
+            System.out.println("Servermodel available: " + inStream.available());
             int op = inStream.readInt();
             System.out.println("sm: operation = " + op);
             Object outObj = null;
@@ -60,13 +61,16 @@ public class ServerModel extends Thread
                 default:
                     break;
             }
+            System.out.println("out obj: " + outObj);
+            ObjectOutputStream outStream = new ObjectOutputStream(sock_.getOutputStream());
             outStream.writeObject(outObj);
             sleep(1000);
             inStream.close();
             outStream.close();
             sock_.close();
+            System.out.println("socket close");
         } catch (Exception e) {
-            System.err.println(e);
+            System.out.println(e);
         }
     }
 
@@ -74,14 +78,15 @@ public class ServerModel extends Thread
     {
         String query = "SELECT g.name as genre, a.name as author, b.name as title, "
                 + "b.text as text, b.views as views, b.date as date "
-                + "FROM book b, (SELECT name FROM genre WHERE id = b.id_genre) AS g, "
-                + "(SELECT name FROM author WHERE id = b.id_author) a";
+                + "FROM book b, (SELECT * FROM genre) AS g, "
+                + "(SELECT * FROM author) AS a WHERE a.id = b.id_author and g.id = b.id_genre;";
         PreparedStatement ps = conn_.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
         ArrayList<Book> bukz = new ArrayList<>();
         while (rs.next()) {
             Book book = new Book();
             book.author = rs.getString("author");
+            System.out.println(book.author);
             book.genre = rs.getString("genre");
             book.date = rs.getDate("date");
             book.name = rs.getString("title");

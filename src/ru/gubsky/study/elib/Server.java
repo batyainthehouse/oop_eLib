@@ -24,7 +24,7 @@ import ru.gubsky.study.elib.models.ServerModel;
  */
 public class Server extends JFrame
 {
-    final static int PORT = 5555;
+    final static int PORT = 15755;
     private Connection conn_;
     private Statement stat_;
     private JTextField tfName_;
@@ -67,7 +67,9 @@ public class Server extends JFrame
             System.out.println("Server is running");
             ServerSocket ss = new ServerSocket(PORT);
             while (true) {
+                System.out.println("Server: перед принятием");
                 Socket s = ss.accept();
+                System.out.println("Server : чтото принято");
                 ServerModel sm = new ServerModel(s, sqlProperties);
                 sm.start();
             }
