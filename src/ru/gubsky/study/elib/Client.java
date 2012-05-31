@@ -13,7 +13,7 @@ public class Client
 {
     public static void main(String[] args)
     {
-        SearchBooksVC sb = new SearchBooksVC();
-        sb.setModel(new ClientModel());
+        SearchBooksVC sb = new SearchBooksVC(new ClientModel());
+        sb.setVisible(true);
     }
 }
