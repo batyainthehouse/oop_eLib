@@ -4,10 +4,14 @@
  */
 package ru.gubsky.study.elib.vc;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import ru.gubsky.study.elib.models.Book;
 import ru.gubsky.study.elib.models.BookTableModel;
 import ru.gubsky.study.elib.models.ClientModel;
 import ru.gubsky.study.elib.views.SearchBooksView;
@@ -20,14 +24,14 @@ public class SearchBooksVC
 {
     // use directly
     private ClientModel model_;
-    
     // don't use directly, use getters
     private SearchBooksView view_;
-    
+
     public SearchBooksVC(ClientModel model)
     {
         model_ = model;
         getView().getGenreList_().setListData(model.getGenres());
+        getView().setSearchButtonListener(searchButtonListener());
     }
 
     private ChangeListener tabChangeListener()
@@ -40,7 +44,7 @@ public class SearchBooksVC
                 JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
                 int index = sourceTabbedPane.getSelectedIndex();
                 System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
-                switch(index) {
+                switch (index) {
                     case 0:
                         getView().getGenreList_().setListData(model_.getGenres());
                         break;
@@ -50,17 +54,29 @@ public class SearchBooksVC
                     case 2:
                         BookTableModel bookModel = new BookTableModel(model_.getPopularBook(0, 100));
                         getView().updatePopular(bookModel);
-                        
                         break;
                     case 3:
                         break;
                 }
-                //model_.getGenres();
             }
         };
         return changeListener;
     }
-    
+
+    private ActionListener searchButtonListener()
+    {
+        ActionListener al = new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String searchText = getView().getSearchTf().getText();
+                ArrayList<Book> bukz = model_.getBooksBySearching(searchText);
+            }
+        };
+        return al;
+    }
+
     private SearchBooksView getView()
     {
         System.out.println("getView");

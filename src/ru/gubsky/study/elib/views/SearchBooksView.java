@@ -7,6 +7,7 @@ package ru.gubsky.study.elib.views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -28,8 +29,26 @@ public class SearchBooksView extends JFrame
     private JPanel noveltyPanel_;
     private JTabbedPane tabbedPane_;
     private ChangeListener tabChangeListener_;
+    private ActionListener searchButtonListener_;
     private JTable popBukzTable_;
-
+    private JButton searchButton_;
+    private JTextField searchTf_;
+    
+    public JTextField getSearchTf()
+    {
+        if (searchTf_ == null) {
+            searchTf_ = new JTextField(30);
+        }
+        return searchTf_;
+    }
+    
+    public void setSearchButtonListener(ActionListener searchButtonListener)
+    {
+        getSearchButton().removeActionListener(this.searchButtonListener_);
+        this.searchButtonListener_ = searchButtonListener;
+        getSearchButton().addActionListener(searchButtonListener);
+    }
+    
     private JTable getPopBukzTable()
     {
         if (popBukzTable_ == null) {
@@ -132,15 +151,20 @@ public class SearchBooksView extends JFrame
         add(searchPanel(), BorderLayout.PAGE_START);
     }
 
+    private JButton getSearchButton()
+    {
+        if (searchButton_ == null) {
+            searchButton_ = new JButton("Найти");
+        }
+        return searchButton_;
+    }
+    
     private JPanel searchPanel()
     {
         JPanel searchPanel = new JPanel();
 
-        JTextField searchTf = new JTextField(30);
-        searchPanel.add(searchTf);
-
-        JButton searchButton = new JButton("Найти");
-        searchPanel.add(searchButton);
+        searchPanel.add(getSearchTf());
+        searchPanel.add(getSearchButton());
 
         return searchPanel;
     }

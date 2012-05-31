@@ -4,23 +4,31 @@
  */
 package ru.gubsky.study.elib;
 
+import java.net.ServerSocket;
+import java.net.Socket;
 import javax.swing.JFrame;
+import ru.gubsky.study.elib.models.ServerModel;
 
 /**
 
  @author GG
  */
-public class Server extends JFrame
+public class Server
 {
     final static int PORT = 3333;
-
+    
     public Server()
     {
-        
-    }
-
-    public void main(String[] args)
-    {
-        
+        try {
+            System.out.println("Server is running");
+            ServerSocket ss = new ServerSocket(PORT);
+            while (true) {
+                Socket s = ss.accept();
+                ServerModel sm = new ServerModel(s);
+                sm.start();
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
     }
 }

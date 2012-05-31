@@ -4,6 +4,9 @@
  */
 package ru.gubsky.study.elib.models;
 
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -13,6 +16,10 @@ import java.util.Date;
  */
 public class ClientModel
 {
+    final static String HOST = "localhost";
+    final static int PORT = 3333;
+    final static int OPERATION_SEARCH = 1;
+    
     public String[] getGenres()
     {
         String[] str = new String[] {
@@ -44,6 +51,52 @@ public class ClientModel
             b1.name = "как я вышел погулять";
             b1.popularity = 10;
             bukz.add(b1);
+        }
+        return bukz;
+    }
+    
+    public String getText(int bookId)
+    {
+        return "ajskdfjaksdjfk;ajsdfkjadfaksdjfkasjdfkjasdkfjaksdjfkajsdfkjasf"
+                + "aksdfjaksjdfklajsd;afjskdfjaksdfj"
+                + "askdfjak;dsjfk;asjdfkajsf"
+                + "askdfjaskfjaskfjakdfjakldfs"
+                + "afgaskgjaskgjaknkdfb"
+                + "dgaskgjaaskgjaaskgjaaskgjaaskgjaa"
+                + "gaskgjaaskgjaaskgjaaskgjaaskgjaa"
+                + "dsaskgjaaskgjaaskgjag"
+                + "asaskgjaaskgjaaskgjag"
+                + "adaskgjaaskgjaaskgjasg"
+                + "dsfgkdfjgkdjrgkdjgkd"
+                + "rgaskgjaaskgjaaskgjad"
+                + "gaskgjaaskgjaaskgjaaskgjaaskgja"
+                + "dgradjgkajsdgkajskdgjak;dgj";
+    }
+    
+    public ArrayList<Book> getBooksBySearching(String text)
+    {
+        if (text == null || text.isEmpty()) {
+            return null;
+        }
+        
+        ArrayList<Book> bukz = null;
+        try {
+            System.out.println("Client: send search text: " + text);
+            Socket sock = new Socket(HOST, PORT);
+            
+            // write
+            ObjectOutputStream outStream = new ObjectOutputStream(sock.getOutputStream());
+            outStream.writeInt(OPERATION_SEARCH);
+            outStream.writeChars(text);
+            
+            // read
+            ObjectInputStream inStream = new ObjectInputStream(sock.getInputStream());
+            bukz = (ArrayList<Book>) inStream.readObject();
+            inStream.close();
+            outStream.close();
+            sock.close();
+        } catch (Exception e) {
+            System.err.println(e);
         }
         return bukz;
     }
