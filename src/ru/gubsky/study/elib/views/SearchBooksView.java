@@ -27,17 +27,14 @@ public class SearchBooksView extends JFrame
   
     private ChangeListener tabChangeListener_;
 
-    public ChangeListener getTabChangeListener()
-    {
-        return tabChangeListener_;
-    }
-
     public void setTabChangeListener(ChangeListener tabChangeListener)
     {
+        getTabbedPane_().removeChangeListener(this.tabChangeListener_);
         this.tabChangeListener_ = tabChangeListener;
+        getTabbedPane_().addChangeListener(this.tabChangeListener_);
     }   
     
-    private JList getAuthorsList_()
+    public JList getAuthorsList_()
     {
         if (authorsList_ == null) {
             authorsList_ = new JList();
@@ -49,6 +46,8 @@ public class SearchBooksView extends JFrame
     {
         if (authorsPanel_ == null) {
             authorsPanel_ = new JPanel();
+            authorsPanel_.setLayout(new FlowLayout(FlowLayout.LEADING));
+            authorsPanel_.add(getAuthorsList_());
         }
         return authorsPanel_;
     }
@@ -95,7 +94,6 @@ public class SearchBooksView extends JFrame
             tabbedPane_.addTab("Авторы", getAuthorsPanel_());
             tabbedPane_.addTab("Популярное", getPopularPanel_());
             tabbedPane_.addTab("Новинки", getNoveltyPanel_());            
-            tabbedPane_.addChangeListener(getTabChangeListener());
         }
         return tabbedPane_;
     }

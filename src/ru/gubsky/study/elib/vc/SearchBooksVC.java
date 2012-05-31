@@ -39,7 +39,14 @@ public class SearchBooksVC
                 JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
                 int index = sourceTabbedPane.getSelectedIndex();
                 System.out.println("Tab changed to: " + sourceTabbedPane.getTitleAt(index));
-
+                switch(index) {
+                    case 0:
+                        getView().getGenreList_().setListData(model_.getGenres());
+                    case 1:
+                        getView().getAuthorsList_().setListData(model_.getAuthors());
+                    case 2:
+                    case 3:
+                }
                 //model_.getGenres();
             }
         };

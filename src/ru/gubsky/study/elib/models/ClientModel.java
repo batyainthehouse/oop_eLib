@@ -19,4 +19,15 @@ public class ClientModel
         };
         return str;
     }
+    
+    public String[] getAuthors()
+    {
+        String[] str = new String[]{
+            "гоша",
+            "иванов",
+            "николай иванович"
+        };
+        return str;
+    }
+    
 }
