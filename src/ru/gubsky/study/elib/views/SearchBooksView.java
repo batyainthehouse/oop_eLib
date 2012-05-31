@@ -5,6 +5,8 @@
 package ru.gubsky.study.elib.views;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 
@@ -63,6 +65,8 @@ public class SearchBooksView extends JFrame
     {
         if (genrePanel_ == null) {
             genrePanel_ = new JPanel();
+            genrePanel_.setLayout(new FlowLayout(FlowLayout.LEADING));
+            genrePanel_.add(getGenreList_());
         }
         return genrePanel_;
     }
