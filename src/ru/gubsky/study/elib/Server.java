@@ -24,7 +24,7 @@ import ru.gubsky.study.elib.models.ServerModel;
  */
 public class Server extends JFrame
 {
-    final static int PORT = 3333;
+    final static int PORT = 5555;
     private Connection conn_;
     private Statement stat_;
     private JTextField tfName_;
@@ -100,7 +100,7 @@ public class Server extends JFrame
 
         this.add(topPanel);
 
-        this.add(new JLabel("Текст"));
+        this.add(new JLabel("Текст"));  
         taText_ = new JTextArea(50, 20);
         JScrollPane scrollPane = new JScrollPane(taText_);
         this.add(scrollPane);
@@ -128,14 +128,14 @@ public class Server extends JFrame
     {
         int result = 0;
 
-        String sqlSelect = "SELECT row_id FROM " + table + " WHERE "
+        String sqlSelect = "SELECT id FROM " + table + " WHERE "
                 + field + " = ?;";
         PreparedStatement preps = conn_.prepareStatement(sqlSelect);
         preps.setString(1, value);
         ResultSet rs = preps.executeQuery();
 
         if (rs.next()) {
-            result = rs.getInt("row_id");
+            result = rs.getInt("id");
             rs.close();
         } else if (createNew == false) {
             result = 0;
@@ -153,7 +153,7 @@ public class Server extends JFrame
                 }
             } catch (SQLException ex) {
                 System.out.println("ex: " + ex.getMessage());
-                System.out.println("word: " + value);
+                System.out.println("value: " + value);
             } finally {
                 rs.close();
                 ps.close();

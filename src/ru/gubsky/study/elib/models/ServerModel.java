@@ -51,7 +51,7 @@ public class ServerModel extends Thread
             ObjectInputStream inStream = new ObjectInputStream(sock_.getInputStream());
             ObjectOutputStream outStream = new ObjectOutputStream(sock_.getOutputStream());
             int op = inStream.readInt();
-
+            System.out.println("sm: operation = " + op);
             Object outObj = null;
             switch (op) {
                 case OPERATION_SEARCH:

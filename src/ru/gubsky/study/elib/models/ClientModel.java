@@ -17,7 +17,7 @@ import java.util.Date;
 public class ClientModel
 {
     final static String HOST = "localhost";
-    final static int PORT = 3333;
+    final static int PORT = 5555;
     final static int OPERATION_SEARCH = 1;
     
     public String[] getGenres()
