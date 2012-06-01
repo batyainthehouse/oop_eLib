@@ -6,6 +6,7 @@ package ru.gubsky.study.elib.views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -67,7 +68,7 @@ public class SearchBooksView extends JFrame
             searchBukzTable_ = new JTable();
             JScrollPane scrollPane = new JScrollPane(searchBukzTable_);
             searchBukzTable_.setFillsViewportHeight(true);
-            getSearchPanel().add(scrollPane);
+            getRightSearchPanel().add(scrollPane);
         }
         return searchBukzTable_;
     }
@@ -175,7 +176,8 @@ public class SearchBooksView extends JFrame
     private JPanel getSearchPanel()
     {
         if (searchPanel_ == null) {
-            searchPanel_ = new JPanel(new FlowLayout(FlowLayout.LEADING));
+            searchPanel_ = new JPanel();
+            searchPanel_.setLayout(new BoxLayout(searchPanel_, BoxLayout.Y_AXIS));
             JPanel topPanel = new JPanel();
             topPanel.add(getSearchTf());
             topPanel.add(getSearchButton());
@@ -183,18 +185,47 @@ public class SearchBooksView extends JFrame
         }
         return searchPanel_;
     }
+    JPanel rightSearchPanel_;
+
+    private JPanel getRightSearchPanel()
+    {
+        if (rightSearchPanel_ == null) {
+            rightSearchPanel_ = new JPanel();
+            rightSearchPanel_.setLayout(new BoxLayout(rightSearchPanel_, BoxLayout.X_AXIS));
+            getSearchPanel().add(rightSearchPanel_);
+        }
+        return rightSearchPanel_;
+    }
     private JTextArea thumbArea_;
 
     public JTextArea getThumbArea()
     {
         if (thumbArea_ == null) {
-            thumbArea_ = new JTextArea(10, 30);
+            thumbArea_ = new JTextArea(10, 10);
             thumbArea_.setLineWrap(true);
+            thumbArea_.setMaximumSize(new Dimension(350, 200));
             thumbArea_.setWrapStyleWord(true);
             thumbArea_.setEditable(false);
-            getSearchPanel().add(thumbArea_);
+            thumbArea_.setAlignmentY(JComponent.TOP_ALIGNMENT);
+            thumbArea_.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+            getThumbnailPanel().add(thumbArea_);
         }
         return thumbArea_;
+    }
+    
+    private JPanel thumbnailPanel_;
+    private JPanel getThumbnailPanel()
+    {
+        if (thumbnailPanel_ == null) {
+            thumbnailPanel_ = new JPanel();
+            thumbnailPanel_.setLayout(new BoxLayout(thumbnailPanel_, BoxLayout.PAGE_AXIS));
+            thumbnailPanel_.setAlignmentY(JComponent.TOP_ALIGNMENT);
+            JLabel lbl = new JLabel("Миниатюра");
+            lbl.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+            thumbnailPanel_.add(lbl);
+            getRightSearchPanel().add(thumbnailPanel_);
+        }
+        return thumbnailPanel_;
     }
 
     public void updatePopular(BookTableModel bookTableModel)
@@ -210,6 +241,7 @@ public class SearchBooksView extends JFrame
         table.removeColumn(table.getColumnModel().getColumn(5));
     }
     private JButton openBookButton_;
+
     public JButton getOpenBookButton()
     {
         if (openBookButton_ == null) {
@@ -223,7 +255,9 @@ public class SearchBooksView extends JFrame
                     readBookView.setVisible(true);
                 }
             });
-            getSearchPanel().add(openBookButton_);
+            openBookButton_.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+            openBookButton_.setAlignmentY(JComponent.TOP_ALIGNMENT);
+            getThumbnailPanel().add(openBookButton_);
         }
         return openBookButton_;
     }
