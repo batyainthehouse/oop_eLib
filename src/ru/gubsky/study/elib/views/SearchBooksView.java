@@ -7,6 +7,7 @@ package ru.gubsky.study.elib.views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
@@ -36,7 +37,7 @@ public class SearchBooksView extends JFrame
     private JButton searchButton_;
     private JTextField searchTf_;
     private JPanel searchPanel_;
-    
+
     public JTextField getSearchTf()
     {
         if (searchTf_ == null) {
@@ -44,14 +45,14 @@ public class SearchBooksView extends JFrame
         }
         return searchTf_;
     }
-    
+
     public void setSearchButtonListener(ActionListener searchButtonListener)
     {
         getSearchButton().removeActionListener(this.searchButtonListener_);
         this.searchButtonListener_ = searchButtonListener;
         getSearchButton().addActionListener(searchButtonListener);
     }
-    
+
     private JTable getPopBukzTable()
     {
         if (popBukzTable_ == null) {
@@ -59,7 +60,7 @@ public class SearchBooksView extends JFrame
         }
         return popBukzTable_;
     }
-    
+
     public JTable getSearchBukzTable()
     {
         if (searchBukzTable_ == null) {
@@ -170,7 +171,7 @@ public class SearchBooksView extends JFrame
         }
         return searchButton_;
     }
-    
+
     private JPanel getSearchPanel()
     {
         if (searchPanel_ == null) {
@@ -182,8 +183,8 @@ public class SearchBooksView extends JFrame
         }
         return searchPanel_;
     }
-    
     private JTextArea thumbArea_;
+
     public JTextArea getThumbArea()
     {
         if (thumbArea_ == null) {
@@ -200,7 +201,7 @@ public class SearchBooksView extends JFrame
     {
         getPopBukzTable().setModel(bookTableModel);
     }
-    
+
     public void updateSearch(BookTableModel bookTableModel, ListSelectionListener l)
     {
         JTable table = getSearchBukzTable();
@@ -208,6 +209,29 @@ public class SearchBooksView extends JFrame
         table.getSelectionModel().addListSelectionListener(l);
         table.removeColumn(table.getColumnModel().getColumn(5));
     }
-    
-    
+    private JButton openBookButton_;
+    public JButton getOpenBookButton()
+    {
+        if (openBookButton_ == null) {
+            openBookButton_ = new JButton("Открыть книгу");
+            openBookButton_.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    ReadBookView readBookView = new ReadBookView(getSelectedBook());
+                    readBookView.setVisible(true);
+                }
+            });
+            getSearchPanel().add(openBookButton_);
+        }
+        return openBookButton_;
+    }
+
+    public Book getSelectedBook()
+    {
+        BookTableModel bookTableModel = (BookTableModel) getSearchBukzTable().getModel();
+        Book book = bookTableModel.getBookAt(getSearchBukzTable().getSelectedRow());
+        return book;
+    }
 }

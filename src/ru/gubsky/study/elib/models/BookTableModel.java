@@ -107,6 +107,11 @@ public class BookTableModel extends AbstractTableModel
         return "";
     }
     
+    public Book getBookAt(int index)
+    {
+        return books_.get(index);
+    }
+    
     public BookTableModel(ArrayList<Book> books_)
     {
         this.books_ = books_;

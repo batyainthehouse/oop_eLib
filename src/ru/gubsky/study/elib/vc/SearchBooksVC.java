@@ -75,6 +75,7 @@ public class SearchBooksVC
                         getView().getSearchBukzTable().getSelectedRow(), 5);
                 BookTableModel bm = (BookTableModel) getView().getSearchBukzTable().getModel();
                 getView().getThumbArea().setText(bm.getTextAt(id).substring(0, 200));
+                getView().getOpenBookButton();
             }
         };
         return listSelListener;
