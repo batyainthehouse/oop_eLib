@@ -73,10 +73,15 @@ public class ServerModel extends Thread
         String query = "SELECT g.name as genre, a.name as author, b.name as title, "
                 + "b.text as text, b.views as views, b.date as date "
                 + "FROM book b, (SELECT * FROM genre) AS g, "
-                + "(SELECT * FROM author) AS a WHERE a.id = b.id_author and g.id = b.id_genre;";
+                + "(SELECT * FROM author) AS a "
+                + "WHERE a.id = b.id_author and g.id = b.id_genre "
+                + "AND (b.name like ? OR a.name like ?)";
         PreparedStatement ps = conn_.prepareStatement(query);
+        ps.setString(1, "%" + text + "%");
+        ps.setString(2, "%" + text + "%");
         ResultSet rs = ps.executeQuery();
         ArrayList<Book> bukz = new ArrayList<>();
+        System.out.println("ServerModel: searchBook");
         while (rs.next()) {
             Book book = new Book();
             book.author = rs.getString("author");

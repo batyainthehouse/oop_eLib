@@ -31,8 +31,10 @@ public class SearchBooksView extends JFrame
     private ChangeListener tabChangeListener_;
     private ActionListener searchButtonListener_;
     private JTable popBukzTable_;
+    private JTable searchBukzTable_;
     private JButton searchButton_;
     private JTextField searchTf_;
+    private JPanel searchPanel_;
     
     public JTextField getSearchTf()
     {
@@ -55,6 +57,14 @@ public class SearchBooksView extends JFrame
             popBukzTable_ = new JTable();
         }
         return popBukzTable_;
+    }
+    
+    private JTable getSearchBukzTable()
+    {
+        if (searchBukzTable_ == null) {
+            searchBukzTable_ = new JTable();
+        }
+        return searchBukzTable_;
     }
 
     public void setTabChangeListener(ChangeListener tabChangeListener)
@@ -127,6 +137,7 @@ public class SearchBooksView extends JFrame
             tabbedPane_.addTab("Авторы", getAuthorsPanel_());
             tabbedPane_.addTab("Популярное", getPopularPanel_());
             tabbedPane_.addTab("Новинки", getNoveltyPanel_());
+            tabbedPane_.addTab("Поиск", getSearchPanel());
         }
         return tabbedPane_;
     }
@@ -145,10 +156,7 @@ public class SearchBooksView extends JFrame
         //setLayout(new GridLayout(1, 2));
 
         // tab
-        add(getTabbedPane_(), BorderLayout.CENTER);
-
-        // search
-        add(searchPanel(), BorderLayout.PAGE_START);
+        add(getTabbedPane_(), BorderLayout.PAGE_START);
     }
 
     private JButton getSearchButton()
@@ -159,18 +167,26 @@ public class SearchBooksView extends JFrame
         return searchButton_;
     }
     
-    private JPanel searchPanel()
+    private JPanel getSearchPanel()
     {
-        JPanel searchPanel = new JPanel();
-
-        searchPanel.add(getSearchTf());
-        searchPanel.add(getSearchButton());
-
-        return searchPanel;
+        if (searchPanel_ == null) {
+            searchPanel_ = new JPanel();
+            searchPanel_.add(getSearchTf());
+            searchPanel_.add(getSearchButton());
+            JScrollPane scrollPane = new JScrollPane(getSearchBukzTable());
+            getSearchBukzTable().setFillsViewportHeight(true);
+            searchPanel_.add(scrollPane);
+        }
+        return searchPanel_;
     }
 
     public void updatePopular(BookTableModel bookTableModel)
     {
         getPopBukzTable().setModel(bookTableModel);
+    }
+    
+    public void updateSearch(BookTableModel bookTableModel)
+    {
+        getSearchBukzTable().setModel(bookTableModel);
     }
 }
