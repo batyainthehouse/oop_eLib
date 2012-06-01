@@ -156,20 +156,11 @@ public class SearchBooksView extends JFrame
     }
 
     private JButton openBookButton_;
-    public JButton getOpenBookButton()
+    public JButton getOpenBookButton(ActionListener l)
     {
         if (openBookButton_ == null) {
             openBookButton_ = new JButton("Открыть книгу");
-            openBookButton_.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
-                {
-                    ReadBookView readBookView = new ReadBookView(getSelectedBook());
-                    readBookView.setVisible(true);
-                }
-
-            });
+            openBookButton_.addActionListener(l);
             openBookButton_.setAlignmentX(JComponent.CENTER_ALIGNMENT);
             openBookButton_.setAlignmentY(JComponent.TOP_ALIGNMENT);
             getThumbnailPanel().add(openBookButton_);

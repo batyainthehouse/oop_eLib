@@ -19,10 +19,10 @@ import java.util.Properties;
 public class ServerModel extends Thread
 {
     final static int OPERATION_SEARCH = 1;
+    final static int OPERATION_ADD_VIEW = 2;
     private Socket sock_;
     private Connection conn_;
     private Statement stat_;
-
     public ServerModel(Socket s, Properties sqlProperties) throws SQLException
     {
         sock_ = s;
@@ -54,14 +54,21 @@ public class ServerModel extends Thread
                 case OPERATION_SEARCH:
                     outObj = searchBook((String) inStream.readObject());
                     break;
+                case OPERATION_ADD_VIEW:
+                    addViewForBookId((int) inStream.readInt());
+                    break;
                 default:
                     break;
             }
-            ObjectOutputStream outStream = new ObjectOutputStream(sock_.getOutputStream());
-            outStream.writeObject(outObj);
-            sleep(1000);
+            if (outObj != null) {
+                ObjectOutputStream outStream = new ObjectOutputStream(sock_.getOutputStream());
+                outStream.writeObject(outObj);
+                sleep(1000);
+                outStream.close();
+            } else {
+                sleep(1000);
+            }
             inStream.close();
-            outStream.close();
             sock_.close();
         } catch (Exception e) {
             System.out.println(e);
@@ -95,4 +102,13 @@ public class ServerModel extends Thread
         }
         return bukz;
     }
+
+    private void addViewForBookId(int id) throws SQLException
+    {
+        String query = "UPDATE book SET views = views + 1 WHERE id = ?";
+        PreparedStatement ps = conn_.prepareStatement(query);
+        ps.setInt(1, id);
+        ps.executeUpdate();
+    }
+
 }

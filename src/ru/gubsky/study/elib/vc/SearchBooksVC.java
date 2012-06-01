@@ -15,6 +15,7 @@ import javax.swing.event.ListSelectionListener;
 import ru.gubsky.study.elib.models.Book;
 import ru.gubsky.study.elib.models.BookTableModel;
 import ru.gubsky.study.elib.models.ClientModel;
+import ru.gubsky.study.elib.views.ReadBookView;
 import ru.gubsky.study.elib.views.SearchBooksView;
 
 /**
@@ -45,7 +46,18 @@ public class SearchBooksVC
                     int id = getView().getSelectedBook().id;
                     BookTableModel bm = (BookTableModel) getView().getSearchBukzTable().getModel();
                     getView().getThumbArea().setText(bm.getTextAt(id).substring(0, 150));
-                    getView().getOpenBookButton();
+                    getView().getOpenBookButton(new ActionListener()
+                    {
+                        @Override
+                        public void actionPerformed(ActionEvent e)
+                        {
+                            Book selBook = getView().getSelectedBook();
+                            model_.addViewForBookId(selBook.id);
+                            ReadBookView readBookView = new ReadBookView(selBook);
+                            readBookView.setVisible(true);
+                        }
+
+                    });
                 }
 
             };

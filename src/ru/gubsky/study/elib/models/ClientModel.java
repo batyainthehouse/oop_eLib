@@ -19,6 +19,7 @@ public class ClientModel
     final static String HOST = "localhost";
     final static int PORT = 15755;
     final static int OPERATION_SEARCH = 1;
+    final static int OPERATION_ADD_VIEW = 2;
     
     public String[] getGenres()
     {
@@ -101,5 +102,23 @@ public class ClientModel
         }
         System.out.println("Client model: " + bukz);
         return bukz;
+    }
+    
+    public void addViewForBookId(int id)
+    {
+        try {
+            Socket sock = new Socket(HOST, PORT);
+            
+            // write
+            ObjectOutputStream outStream = new ObjectOutputStream(sock.getOutputStream());
+            outStream.writeInt(OPERATION_ADD_VIEW);
+            outStream.writeInt(id);
+            outStream.flush();
+            
+            outStream.close();
+            sock.close();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
     }
 }
