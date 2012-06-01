@@ -77,7 +77,7 @@ public class ClientModel
     public ArrayList<Book> getBooksBySearching(String text)
     {
         if (text == null || text.isEmpty()) {
-            return null;
+            return new ArrayList<>();
         }
         
         ArrayList<Book> bukz = null;

@@ -117,7 +117,7 @@ public class SearchBooksView extends JFrame
     public JTextArea getThumbArea()
     {
         if (thumbArea_ == null) {
-            thumbArea_ = new JTextArea(10, 10);
+            thumbArea_ = new JTextArea(10, 15);
             thumbArea_.setLineWrap(true);
             thumbArea_.setMaximumSize(new Dimension(350, 200));
             thumbArea_.setWrapStyleWord(true);
