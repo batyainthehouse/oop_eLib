@@ -7,10 +7,11 @@ package ru.gubsky.study.elib.vc;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import ru.gubsky.study.elib.models.Book;
 import ru.gubsky.study.elib.models.BookTableModel;
 import ru.gubsky.study.elib.models.ClientModel;
@@ -61,6 +62,23 @@ public class SearchBooksVC
         };
         return changeListener;
     }
+    
+    
+    private ListSelectionListener listSelectionListener()
+    {
+        ListSelectionListener listSelListener = new ListSelectionListener()
+        {
+            @Override
+            public void valueChanged(ListSelectionEvent e)
+            {
+                int id = (int) getView().getSearchBukzTable().getModel().getValueAt(
+                        getView().getSearchBukzTable().getSelectedRow(), 5);
+                BookTableModel bm = (BookTableModel) getView().getSearchBukzTable().getModel();
+                getView().getThumbArea().setText(bm.getTextAt(id).substring(0, 200));
+            }
+        };
+        return listSelListener;
+    }
 
     private ActionListener searchButtonListener()
     {
@@ -72,7 +90,7 @@ public class SearchBooksVC
                 String searchText = getView().getSearchTf().getText();
                 ArrayList<Book> bukz = model_.getBooksBySearching(searchText);
                 BookTableModel bookModel = new BookTableModel(bukz);
-                getView().updateSearch(bookModel);
+                getView().updateSearch(bookModel, listSelectionListener());
             }
         };
         return al;

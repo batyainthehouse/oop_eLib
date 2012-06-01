@@ -25,7 +25,7 @@ public class BookTableModel extends AbstractTableModel
     @Override
     public int getColumnCount()
     {
-        return 5;
+        return 6;
     }
 
     @Override
@@ -42,6 +42,8 @@ public class BookTableModel extends AbstractTableModel
                 return "Просмотров";
             case 4:
                 return "Дата добавления";
+            case 5:
+                return "id";
             default:
                 return "Непонятно";
         }
@@ -59,6 +61,8 @@ public class BookTableModel extends AbstractTableModel
                 return int.class;
             case 4:
                 return Date.class;
+            case 5:
+                return int.class;
             default:
                 return String.class;
         }
@@ -85,13 +89,24 @@ public class BookTableModel extends AbstractTableModel
                 return book.popularity;
             case 4:
                 return book.date;
+            case 5:
+                return book.id;
             default:
                 return 0;
         }
     }
     
     private ArrayList<Book> books_;
-
+    public String getTextAt(int id)
+    {
+        for (Book b : books_) {
+            if (b.id == id) {
+                return b.text;
+            }
+        }
+        return "";
+    }
+    
     public BookTableModel(ArrayList<Book> books_)
     {
         this.books_ = books_;

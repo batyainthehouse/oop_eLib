@@ -13,6 +13,7 @@ import java.util.Date;
  */
 public class Book implements Serializable
 {
+    public int id;
     public String author;
     public String name;
     public String genre;

@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionListener;
 import ru.gubsky.study.elib.models.Book;
 import ru.gubsky.study.elib.models.BookTableModel;
 
@@ -59,10 +60,13 @@ public class SearchBooksView extends JFrame
         return popBukzTable_;
     }
     
-    private JTable getSearchBukzTable()
+    public JTable getSearchBukzTable()
     {
         if (searchBukzTable_ == null) {
             searchBukzTable_ = new JTable();
+            JScrollPane scrollPane = new JScrollPane(searchBukzTable_);
+            searchBukzTable_.setFillsViewportHeight(true);
+            getSearchPanel().add(scrollPane);
         }
         return searchBukzTable_;
     }
@@ -170,14 +174,26 @@ public class SearchBooksView extends JFrame
     private JPanel getSearchPanel()
     {
         if (searchPanel_ == null) {
-            searchPanel_ = new JPanel();
-            searchPanel_.add(getSearchTf());
-            searchPanel_.add(getSearchButton());
-            JScrollPane scrollPane = new JScrollPane(getSearchBukzTable());
-            getSearchBukzTable().setFillsViewportHeight(true);
-            searchPanel_.add(scrollPane);
+            searchPanel_ = new JPanel(new FlowLayout(FlowLayout.LEADING));
+            JPanel topPanel = new JPanel();
+            topPanel.add(getSearchTf());
+            topPanel.add(getSearchButton());
+            searchPanel_.add(topPanel);
         }
         return searchPanel_;
+    }
+    
+    private JTextArea thumbArea_;
+    public JTextArea getThumbArea()
+    {
+        if (thumbArea_ == null) {
+            thumbArea_ = new JTextArea(10, 30);
+            thumbArea_.setLineWrap(true);
+            thumbArea_.setWrapStyleWord(true);
+            thumbArea_.setEditable(false);
+            getSearchPanel().add(thumbArea_);
+        }
+        return thumbArea_;
     }
 
     public void updatePopular(BookTableModel bookTableModel)
@@ -185,8 +201,13 @@ public class SearchBooksView extends JFrame
         getPopBukzTable().setModel(bookTableModel);
     }
     
-    public void updateSearch(BookTableModel bookTableModel)
+    public void updateSearch(BookTableModel bookTableModel, ListSelectionListener l)
     {
-        getSearchBukzTable().setModel(bookTableModel);
+        JTable table = getSearchBukzTable();
+        table.setModel(bookTableModel);
+        table.getSelectionModel().addListSelectionListener(l);
+        table.removeColumn(table.getColumnModel().getColumn(5));
     }
+    
+    
 }

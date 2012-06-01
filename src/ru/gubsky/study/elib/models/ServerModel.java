@@ -71,7 +71,7 @@ public class ServerModel extends Thread
     private ArrayList<Book> searchBook(String text) throws SQLException
     {
         String query = "SELECT g.name as genre, a.name as author, b.name as title, "
-                + "b.text as text, b.views as views, b.date as date "
+                + "b.text as text, b.views as views, b.date as date, b.id as id "
                 + "FROM book b, (SELECT * FROM genre) AS g, "
                 + "(SELECT * FROM author) AS a "
                 + "WHERE a.id = b.id_author and g.id = b.id_genre "
@@ -81,11 +81,12 @@ public class ServerModel extends Thread
         ps.setString(2, "%" + text + "%");
         ResultSet rs = ps.executeQuery();
         ArrayList<Book> bukz = new ArrayList<>();
-        System.out.println("ServerModel: searchBook");
         while (rs.next()) {
             Book book = new Book();
             book.author = rs.getString("author");
             book.genre = rs.getString("genre");
+            book.id = rs.getInt("id");
+            System.out.println("id = " + book.id);
             book.date = rs.getDate("date");
             book.name = rs.getString("title");
             book.text = rs.getString("text");

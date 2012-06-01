@@ -4,6 +4,7 @@
  */
 package ru.gubsky.study.elib;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -31,7 +32,8 @@ public class Server extends JFrame
     private JTextField tfAuthor_;
     private JTextField tfGenre_;
     private JTextArea taText_;
-
+    private boolean isRun = true;
+    
     public Server(Properties sqlProperties) throws SQLException
     {
         super();
@@ -66,7 +68,7 @@ public class Server extends JFrame
         try {
             System.out.println("Server is running");
             ServerSocket ss = new ServerSocket(PORT);
-            while (true) {
+            while (isRun) {
                 Socket s = ss.accept();
                 ServerModel sm = new ServerModel(s, sqlProperties);
                 sm.start();
@@ -76,13 +78,12 @@ public class Server extends JFrame
         }
     }
 
-    private void createGui()
+    private JFrame addBookPanel()
     {
-        this.setSize(888, 500);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setTitle("eLib. Сервер");
-        this.setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-
+        final JFrame addBookPanel = new JFrame("Добавление книги");
+        addBookPanel.setSize(888, 500);
+        addBookPanel.setLayout(new BoxLayout(addBookPanel.getContentPane(), BoxLayout.Y_AXIS));
+        
         JPanel topPanel = new JPanel(new GridLayout(3, 2));
 
         topPanel.add(new JLabel("Название"));
@@ -98,12 +99,14 @@ public class Server extends JFrame
         tfGenre_ = new JTextField(12);
         topPanel.add(tfGenre_);
 
-        this.add(topPanel);
+        addBookPanel.add(topPanel);
 
-        this.add(new JLabel("Текст"));
+        addBookPanel.add(new JLabel("Текст"));
         taText_ = new JTextArea(50, 20);
+        taText_.setWrapStyleWord(true);
+        taText_.setLineWrap(true);
         JScrollPane scrollPane = new JScrollPane(taText_);
-        this.add(scrollPane);
+        addBookPanel.add(scrollPane);
 
         JButton sendButton = new JButton("Отправить");
         sendButton.addActionListener(new ActionListener()
@@ -115,11 +118,36 @@ public class Server extends JFrame
                 book.author = tfAuthor_.getText();
                 book.genre = tfGenre_.getText();
                 book.name = tfName_.getText();
+                book.text = taText_.getText();
                 saveBook(book);
+                JOptionPane.showMessageDialog(addBookPanel, "Книга добавлена в базу");
+                addBookPanel.dispose();
             }
         });
-        this.add(sendButton);
-
+        addBookPanel.add(sendButton);
+        return addBookPanel;
+    }
+    
+    private void createGui()
+    {
+        this.setSize(177, 100);
+        this.setTitle("eLib. Сервер");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        JLabel lbl = new JLabel("Сервер работает");
+        lbl.setHorizontalAlignment(JLabel.CENTER);
+        this.add(lbl, BorderLayout.PAGE_START);
+        
+        final JButton addButton = new JButton("Добавить книгу");
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                addBookPanel().setVisible(true);
+            }
+        });
+        this.add(addButton, BorderLayout.CENTER);
+        
         this.setVisible(true);
     }
 
