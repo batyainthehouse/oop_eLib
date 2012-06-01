@@ -82,7 +82,8 @@ public class ServerModel extends Thread
                 + "FROM book b, (SELECT * FROM genre) AS g, "
                 + "(SELECT * FROM author) AS a "
                 + "WHERE a.id = b.id_author and g.id = b.id_genre "
-                + "AND (b.name like ? OR a.name like ?)";
+                + "AND (b.name like ? OR a.name like ?) "
+                + "ORDER BY b.date";
         PreparedStatement ps = conn_.prepareStatement(query);
         ps.setString(1, "%" + text + "%");
         ps.setString(2, "%" + text + "%");
