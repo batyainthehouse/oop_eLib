@@ -31,38 +31,8 @@ public class SearchBooksVC
     public SearchBooksVC(ClientModel model)
     {
         model_ = model;
-        getView().getGenreList_().setListData(model.getGenres());
         getView().setSearchButtonListener(searchButtonListener());
-    }
-
-    private ChangeListener tabChangeListener()
-    {
-        ChangeListener changeListener = new ChangeListener()
-        {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent)
-            {
-                JTabbedPane sourceTabbedPane = (JTabbedPane) changeEvent.getSource();
-                int index = sourceTabbedPane.getSelectedIndex();
-                switch (index) {
-                    case 0:
-                        getView().getGenreList_().setListData(model_.getGenres());
-                        break;
-                    case 1:
-                        getView().getAuthorsList_().setListData(model_.getAuthors());
-                        break;
-                    case 2:
-                        BookTableModel bookModel = new BookTableModel(model_.getPopularBook(0, 100));
-                        getView().updatePopular(bookModel);
-                        break;
-                    case 3:
-                        break;
-                }
-            }
-        };
-        return changeListener;
-    }
-    
+    }  
     
     private ListSelectionListener listSelectionListener()
     {
@@ -101,7 +71,6 @@ public class SearchBooksVC
     {
         if (view_ == null) {
             view_ = new SearchBooksView();
-            view_.setTabChangeListener(tabChangeListener());
             view_.setVisible(true);
         }
         return view_;
