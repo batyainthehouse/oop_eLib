@@ -37,7 +37,7 @@ public class ReadBookView extends JFrame
         text.setText("Название: " + book.name);
         text.append("\nАвтор: " + book.author);
         text.append("\nЖанр: " + book.genre);
-        text.append("\nПросмотров: " + book.popularity + "\n");
+        text.append("\nПросмотров: " + book.popularity + "\n\n");
         
         text.append(book.text);
         
