@@ -28,8 +28,7 @@ public class SearchBooksView extends JFrame
     private JTable searchBukzTable_;
     private JButton searchButton_;
     private JTextField searchTf_;
-    private JPanel searchPanel_;
-
+    //private JPanel searchPanel_;
     public SearchBooksView()
     {
         super();
@@ -67,10 +66,14 @@ public class SearchBooksView extends JFrame
         setSize(888, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("eLib. Поиск книг");
-        //setLayout(new GridLayout(1, 2));
+        setLayout(new BorderLayout());
 
         // tab
-        add(getSearchPanel());
+//        add(getSearchPanel());
+        JPanel topPanel = new JPanel();
+        topPanel.add(getSearchTf());
+        topPanel.add(getSearchButton());
+        add(topPanel, BorderLayout.PAGE_START);
     }
 
     private JButton getSearchButton()
@@ -81,26 +84,28 @@ public class SearchBooksView extends JFrame
         return searchButton_;
     }
 
-    private JPanel getSearchPanel()
-    {
-        if (searchPanel_ == null) {
-            searchPanel_ = new JPanel();
-            searchPanel_.setLayout(new BoxLayout(searchPanel_, BoxLayout.Y_AXIS));
-            JPanel topPanel = new JPanel();
-            topPanel.add(getSearchTf());
-            topPanel.add(getSearchButton());
-            searchPanel_.add(topPanel);
-        }
-        return searchPanel_;
-    }
-
+    /*
+     private JPanel getSearchPanel()
+     {
+     if (searchPanel_ == null) {
+     searchPanel_ = new JPanel();
+     searchPanel_.setLayout(new BoxLayout(searchPanel_, BoxLayout.Y_AXIS));
+     JPanel topPanel = new JPanel();
+     topPanel.add(getSearchTf());
+     topPanel.add(getSearchButton());
+     searchPanel_.add(topPanel);
+     }
+     return searchPanel_;
+     }
+     */
     JPanel rightSearchPanel_;
     private JPanel getRightSearchPanel()
     {
         if (rightSearchPanel_ == null) {
             rightSearchPanel_ = new JPanel();
             rightSearchPanel_.setLayout(new BoxLayout(rightSearchPanel_, BoxLayout.X_AXIS));
-            getSearchPanel().add(rightSearchPanel_);
+            //getSearchPanel().add(rightSearchPanel_);
+            add(rightSearchPanel_, BorderLayout.CENTER);
         }
         return rightSearchPanel_;
     }
@@ -138,6 +143,7 @@ public class SearchBooksView extends JFrame
 
     public void updateSearch(BookTableModel bookTableModel, ListSelectionListener l)
     {
+        System.out.println("updateSearch");
         JTable table = getSearchBukzTable();
         table.setModel(bookTableModel);
         table.getSelectionModel().addListSelectionListener(l);
