@@ -99,6 +99,7 @@ public class ClientModel
         } catch (Exception e) {
             System.err.println(e);
         }
+        System.out.println("Client model: " + bukz);
         return bukz;
     }
 }

@@ -27,27 +27,29 @@ public class SearchBooksVC
     private ClientModel model_;
     // don't use directly, use getters
     private SearchBooksView view_;
-
     public SearchBooksVC(ClientModel model)
     {
         model_ = model;
         getView().setSearchButtonListener(searchButtonListener());
-    }  
-    
+    }
+
+    private ListSelectionListener listSelListener;
     private ListSelectionListener listSelectionListener()
     {
-        ListSelectionListener listSelListener = new ListSelectionListener()
-        {
-            @Override
-            public void valueChanged(ListSelectionEvent e)
+        if (listSelListener == null) {
+            listSelListener = new ListSelectionListener()
             {
-                int id = (int) getView().getSearchBukzTable().getModel().getValueAt(
-                        getView().getSearchBukzTable().getSelectedRow(), 5);
-                BookTableModel bm = (BookTableModel) getView().getSearchBukzTable().getModel();
-                getView().getThumbArea().setText(bm.getTextAt(id).substring(0, 150));
-                getView().getOpenBookButton();
-            }
-        };
+                @Override
+                public void valueChanged(ListSelectionEvent e)
+                {
+                    int id = getView().getSelectedBook().id;
+                    BookTableModel bm = (BookTableModel) getView().getSearchBukzTable().getModel();
+                    getView().getThumbArea().setText(bm.getTextAt(id).substring(0, 150));
+                    getView().getOpenBookButton();
+                }
+
+            };
+        }
         return listSelListener;
     }
 
@@ -58,11 +60,14 @@ public class SearchBooksVC
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                getView().getSearchBukzTable().getSelectionModel().removeListSelectionListener(listSelectionListener());
                 String searchText = getView().getSearchTf().getText();
                 ArrayList<Book> bukz = model_.getBooksBySearching(searchText);
                 BookTableModel bookModel = new BookTableModel(bukz);
-                getView().updateSearch(bookModel, listSelectionListener());
+                getView().updateSearch(bookModel);
+                getView().getSearchBukzTable().getSelectionModel().addListSelectionListener(listSelectionListener());
             }
+
         };
         return al;
     }
@@ -75,4 +80,5 @@ public class SearchBooksVC
         }
         return view_;
     }
+
 }

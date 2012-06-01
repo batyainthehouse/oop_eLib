@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import ru.gubsky.study.elib.models.Book;
 import ru.gubsky.study.elib.models.BookTableModel;
 
@@ -56,7 +57,8 @@ public class SearchBooksView extends JFrame
             searchBukzTable_ = new JTable();
             JScrollPane scrollPane = new JScrollPane(searchBukzTable_);
             searchBukzTable_.setFillsViewportHeight(true);
-            getRightSearchPanel().add(scrollPane);
+//            getCenterPanel().add(scrollPane);
+            add(scrollPane, BorderLayout.CENTER);
         }
         return searchBukzTable_;
     }
@@ -66,7 +68,7 @@ public class SearchBooksView extends JFrame
         setSize(888, 500);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("eLib. Поиск книг");
-        setLayout(new BorderLayout());
+//        setLayout(new BorderLayout(10, 10));
 
         // tab
 //        add(getSearchPanel());
@@ -74,6 +76,7 @@ public class SearchBooksView extends JFrame
         topPanel.add(getSearchTf());
         topPanel.add(getSearchButton());
         add(topPanel, BorderLayout.PAGE_START);
+        getSearchBukzTable();
     }
 
     private JButton getSearchButton()
@@ -98,16 +101,16 @@ public class SearchBooksView extends JFrame
      return searchPanel_;
      }
      */
-    JPanel rightSearchPanel_;
-    private JPanel getRightSearchPanel()
+    JPanel centerSearchPanel_;
+    private JPanel getCenterPanel()
     {
-        if (rightSearchPanel_ == null) {
-            rightSearchPanel_ = new JPanel();
-            rightSearchPanel_.setLayout(new BoxLayout(rightSearchPanel_, BoxLayout.X_AXIS));
-            //getSearchPanel().add(rightSearchPanel_);
-            add(rightSearchPanel_, BorderLayout.CENTER);
+        if (centerSearchPanel_ == null) {
+            centerSearchPanel_ = new JPanel();
+            centerSearchPanel_.setLayout(new BoxLayout(centerSearchPanel_, BoxLayout.X_AXIS));
+            //getSearchPanel().add(centerSearchPanel_);
+            add(centerSearchPanel_, BorderLayout.CENTER);
         }
-        return rightSearchPanel_;
+        return centerSearchPanel_;
     }
 
     private JTextArea thumbArea_;
@@ -131,22 +134,24 @@ public class SearchBooksView extends JFrame
     {
         if (thumbnailPanel_ == null) {
             thumbnailPanel_ = new JPanel();
-            thumbnailPanel_.setLayout(new BoxLayout(thumbnailPanel_, BoxLayout.PAGE_AXIS));
+            thumbnailPanel_.setLayout(new BoxLayout(thumbnailPanel_, BoxLayout.Y_AXIS));
             thumbnailPanel_.setAlignmentY(JComponent.TOP_ALIGNMENT);
             JLabel lbl = new JLabel("Миниатюра");
             lbl.setAlignmentX(JComponent.CENTER_ALIGNMENT);
             thumbnailPanel_.add(lbl);
-            getRightSearchPanel().add(thumbnailPanel_);
+//            getCenterPanel().add(thumbnailPanel_);
+            add(thumbnailPanel_, BorderLayout.EAST);
         }
         return thumbnailPanel_;
     }
 
-    public void updateSearch(BookTableModel bookTableModel, ListSelectionListener l)
+    public void updateSearch(BookTableModel bookTableModel)
     {
         System.out.println("updateSearch");
         JTable table = getSearchBukzTable();
+        System.out.println(bookTableModel.getRowCount());
         table.setModel(bookTableModel);
-        table.getSelectionModel().addListSelectionListener(l);
+        table.getSelectionModel().clearSelection();
         table.removeColumn(table.getColumnModel().getColumn(5));
     }
 
