@@ -24,6 +24,9 @@ public class ClientModel
     final static int OPERATION_NEWS = 4;
     final static int OPERATION_GENRES = 5;
     final static int OPERATION_GET_BY_GENRE = 6;
+    final static int OPERATION_AUTHORS = 7;
+    final static int OPERATION_GET_BY_AUTHORS = 8;
+    
     public ArrayList<Book> getBooksBySearching(String text)
     {
 //        if (text == null || text.isEmpty()) {
@@ -144,9 +147,8 @@ public class ClientModel
             System.err.println(e);
         }
         return genres;
-
     }
-    
+
     public ArrayList<Book> getBooksByGenre(String genre)
     {
         ArrayList<Book> bukz = null;
@@ -172,4 +174,52 @@ public class ClientModel
         return bukz;
     }
 
+    public String[] getAuthors()
+    {
+        String[] authors = null;
+        try {
+            Socket sock = new Socket(HOST, PORT);
+
+            // write
+            ObjectOutputStream outStream = new ObjectOutputStream(sock.getOutputStream());
+            outStream.writeInt(OPERATION_AUTHORS);
+            outStream.flush();
+
+            // read
+            ObjectInputStream inStream = new ObjectInputStream(sock.getInputStream());
+            authors = (String[]) inStream.readObject();
+
+            inStream.close();
+            outStream.close();
+            sock.close();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return authors;
+    }
+
+    public ArrayList<Book> getBooksByAuthor(String author)
+    {
+        ArrayList<Book> bukz = null;
+        try {
+            Socket sock = new Socket(HOST, PORT);
+
+            // write
+            ObjectOutputStream outStream = new ObjectOutputStream(sock.getOutputStream());
+            outStream.writeInt(OPERATION_GET_BY_AUTHORS);
+            outStream.writeObject(author);
+            outStream.flush();
+
+            // read
+            ObjectInputStream inStream = new ObjectInputStream(sock.getInputStream());
+            bukz = (ArrayList<Book>) inStream.readObject();
+
+            inStream.close();
+            outStream.close();
+            sock.close();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        return bukz;
+    }
 }

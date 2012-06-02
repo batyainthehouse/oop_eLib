@@ -25,7 +25,9 @@ public class ServerModel extends Thread
     final static int OPERATION_POPULAR = 3;
     final static int OPERATION_NEWS = 4;
     final static int OPERATION_GENRES = 5;
-        final static int OPERATION_GET_BY_GENRE = 6;
+    final static int OPERATION_GET_BY_GENRE = 6;
+    final static int OPERATION_AUTHORS = 7;
+    final static int OPERATION_GET_BY_AUTHOR = 8;
     private Socket sock_;
     private Connection conn_;
     private Statement stat_;
@@ -73,7 +75,13 @@ public class ServerModel extends Thread
                     outObj = genres();
                     break;
                 case OPERATION_GET_BY_GENRE:
-                    outObj = getBooksByGenre((String)inStream.readObject());
+                    outObj = getBooksByGenre((String) inStream.readObject());
+                    break;
+                case OPERATION_AUTHORS:
+                    outObj = authors();
+                    break;
+                case OPERATION_GET_BY_AUTHOR:
+                    outObj = getBooksByAuthor((String) inStream.readObject());
                     break;
                 default:
                     break;
@@ -181,7 +189,7 @@ public class ServerModel extends Thread
         }
         return bukz;
     }
-    
+
     private String[] genres() throws SQLException
     {
         String query = "SELECT name FROM genre";
@@ -195,7 +203,7 @@ public class ServerModel extends Thread
         }
         return genres;
     }
-    
+
     public static int getSizeOfResultSet(ResultSet rs)
     {
         int size = 0;
@@ -237,4 +245,48 @@ public class ServerModel extends Thread
         }
         return bukz;
     }
+
+    private String[] authors() throws SQLException
+    {
+        String query = "SELECT name FROM author";
+        PreparedStatement ps = conn_.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        String[] authors = new String[getSizeOfResultSet(rs)];
+        int i = 0;
+        while (rs.next()) {
+            authors[i] = rs.getString(1);
+            i++;
+        }
+        return authors;
+    }
+
+    private ArrayList<Book> getBooksByAuthor(String author) throws SQLException
+    {
+        String query = "SELECT g.name as genre, a.name as author, b.name as title, "
+                + "b.text as text, b.views as views, b.date as date, b.id as id "
+                + "FROM book b, (SELECT * FROM genre) AS g, "
+                + "(SELECT * FROM author) AS a "
+                + "WHERE a.id = b.id_author and g.id = b.id_genre "
+                + "AND a.name = ?";
+        PreparedStatement ps = conn_.prepareStatement(query);
+        ps.setString(1, author);
+        ResultSet rs = ps.executeQuery();
+        ArrayList<Book> bukz = new ArrayList<>();
+        while (rs.next()) {
+            Book book = new Book();
+            book.author = rs.getString("author");
+            book.genre = rs.getString("genre");
+            book.id = rs.getInt("id");
+            System.out.println("id = " + book.id);
+            book.date = rs.getDate("date");
+            book.name = rs.getString("title");
+            book.text = rs.getString("text");
+            book.popularity = rs.getInt("views");
+            bukz.add(book);
+        }
+                System.out.println("author: " + author);
+        System.out.println(bukz);
+        return bukz;
+    }
+
 }

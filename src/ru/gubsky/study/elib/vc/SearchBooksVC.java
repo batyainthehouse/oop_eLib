@@ -114,6 +114,9 @@ public class SearchBooksVC extends JFrame
                         getGenreList().setListData(genres);
                         break;
                     case 2:
+                        getAuthorsPanel().add(getBookPanel(), BorderLayout.CENTER);
+                        String[] authors = model_.getAuthors();
+                        getAuthorsList().setListData(authors);
                         break;
                     case 3:
                         getPopPanel().add(getBookPanel(), BorderLayout.CENTER);
@@ -329,9 +332,34 @@ public class SearchBooksVC extends JFrame
         return genreList_;
     }
 
+    private JPanel authorsPanel_;
     private JPanel getAuthorsPanel()
     {
-        return new JPanel();
+        if (authorsPanel_ == null) {
+            authorsPanel_ = new JPanel();
+            authorsPanel_.setLayout(new BorderLayout());
+            authorsPanel_.add(getAuthorsList(), BorderLayout.LINE_START);
+        }
+        return authorsPanel_;
+    }
+    
+    private JList authorsList_;
+    private JList getAuthorsList()
+    {
+        if (authorsList_ == null) {
+            authorsList_ = new JList();
+            authorsList_.addListSelectionListener(new ListSelectionListener()
+            {
+                @Override
+                public void valueChanged(ListSelectionEvent e)
+                {
+                    String author = (String) authorsList_.getSelectedValue();
+                    updateBooks(model_.getBooksByAuthor(author));
+                }
+
+            });
+        }
+        return authorsList_;
     }
 
     private JPanel popPanel_;
