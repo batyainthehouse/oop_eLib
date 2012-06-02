@@ -109,7 +109,7 @@ public class ServerModel extends Thread
                 + "(SELECT * FROM author) AS a "
                 + "WHERE a.id = b.id_author and g.id = b.id_genre "
                 + "AND (b.name like ? OR a.name like ?) "
-                + "ORDER BY b.date";
+                + "ORDER BY b.name";
         PreparedStatement ps = conn_.prepareStatement(query);
         ps.setString(1, "%" + text + "%");
         ps.setString(2, "%" + text + "%");
@@ -192,7 +192,7 @@ public class ServerModel extends Thread
 
     private String[] genres() throws SQLException
     {
-        String query = "SELECT name FROM genre";
+        String query = "SELECT name FROM genre ORDER BY NAME";
         PreparedStatement ps = conn_.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
         String[] genres = new String[getSizeOfResultSet(rs)];
@@ -226,7 +226,7 @@ public class ServerModel extends Thread
                 + "FROM book b, (SELECT * FROM genre) AS g, "
                 + "(SELECT * FROM author) AS a "
                 + "WHERE a.id = b.id_author and g.id = b.id_genre "
-                + "AND g.name = ?";
+                + "AND g.name = ? ORDER BY b.name";
         PreparedStatement ps = conn_.prepareStatement(query);
         ps.setString(1, genre);
         ResultSet rs = ps.executeQuery();
@@ -248,7 +248,7 @@ public class ServerModel extends Thread
 
     private String[] authors() throws SQLException
     {
-        String query = "SELECT name FROM author";
+        String query = "SELECT name FROM author ORDER BY name";
         PreparedStatement ps = conn_.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
         String[] authors = new String[getSizeOfResultSet(rs)];
@@ -267,7 +267,7 @@ public class ServerModel extends Thread
                 + "FROM book b, (SELECT * FROM genre) AS g, "
                 + "(SELECT * FROM author) AS a "
                 + "WHERE a.id = b.id_author and g.id = b.id_genre "
-                + "AND a.name = ?";
+                + "AND a.name = ? ORDER BY b.name";
         PreparedStatement ps = conn_.prepareStatement(query);
         ps.setString(1, author);
         ResultSet rs = ps.executeQuery();
