@@ -99,33 +99,32 @@ public class SearchBooksVC extends JFrame
             public void stateChanged(ChangeEvent e)
             {
                 int index = tabbedPane.getSelectedIndex();
-                getSearchBukzTable().getSelectionModel().removeListSelectionListener(listSelectionListener());
+                getSearchBukzTable().getSelectionModel().removeListSelectionListener(listSelectionListener()); // todo: delete
                 removePanel();
                 ArrayList<Book> bukz;
-                BookTableModel btm;
+
                 switch (index) {
                     case 0:
                         getSearchPanel().add(getBookPanel(), BorderLayout.CENTER);
                         search();
                         break;
                     case 1:
+                        getGenrePanel().add(getBookPanel(), BorderLayout.CENTER);
+                        String[] genres = model_.getGenres();
+                        getGenreList().setListData(genres);
                         break;
                     case 2:
                         break;
                     case 3:
                         getPopPanel().add(getBookPanel(), BorderLayout.CENTER);
-                        bukz = model_.getPopBooks();
-                        btm = new BookTableModel(bukz);
-                        updateSearch(btm);
+                        updateBooks(model_.getPopBooks());
                         break;
                     case 4:
                         getNewsPanel().add(getBookPanel(), BorderLayout.CENTER);
-                        bukz = model_.getNewBooks();
-                        btm = new BookTableModel(bukz);
-                        updateSearch(btm);
+                        updateBooks(model_.getNewBooks());
                         break;
                 }
-                getSearchBukzTable().getSelectionModel().addListSelectionListener(listSelectionListener());
+                getSearchBukzTable().getSelectionModel().addListSelectionListener(listSelectionListener()); // todo: delete
 
 
             }
@@ -136,6 +135,14 @@ public class SearchBooksVC extends JFrame
 
         getSearchPanel().add(getBookPanel(), BorderLayout.CENTER);
         setSearchButtonListener(searchButtonListener());
+    }
+
+    private void updateBooks(ArrayList<Book> bukz)
+    {
+        getSearchBukzTable().getSelectionModel().removeListSelectionListener(listSelectionListener());
+        BookTableModel btm = new BookTableModel(bukz);
+        updateSearch(btm);
+        getSearchBukzTable().getSelectionModel().addListSelectionListener(listSelectionListener());
     }
 
     // выбор новой книги в таблице
@@ -292,9 +299,34 @@ public class SearchBooksVC extends JFrame
         return book;
     }
 
+    private JPanel genrePanel_;
     private JPanel getGenrePanel()
     {
-        return new JPanel();
+        if (genrePanel_ == null) {
+            genrePanel_ = new JPanel();
+            genrePanel_.setLayout(new BorderLayout());
+            genrePanel_.add(getGenreList(), BorderLayout.LINE_START);
+        }
+        return genrePanel_;
+    }
+
+    private JList genreList_;
+    private JList getGenreList()
+    {
+        if (genreList_ == null) {
+            genreList_ = new JList();
+            genreList_.addListSelectionListener(new ListSelectionListener()
+            {
+                @Override
+                public void valueChanged(ListSelectionEvent e)
+                {
+                    String genre = (String) genreList_.getSelectedValue();
+                    updateBooks(model_.getBooksByGenre(genre));
+                }
+
+            });
+        }
+        return genreList_;
     }
 
     private JPanel getAuthorsPanel()
