@@ -6,6 +6,7 @@ package ru.gubsky.study.elib;
 
 import ru.gubsky.study.elib.models.ClientModel;
 import ru.gubsky.study.elib.vc.SearchBooksVC;
+import ru.gubsky.study.elib.vc.SearchBooksVC;
 
 /**
  @author GG
@@ -15,5 +16,6 @@ public class Client
     public static void main(String[] args)
     {
         SearchBooksVC sb = new SearchBooksVC(new ClientModel());
+        new SearchBooksVC(new ClientModel()).setVisible(true);
     }
 }
