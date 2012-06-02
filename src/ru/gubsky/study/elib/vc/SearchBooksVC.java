@@ -99,7 +99,7 @@ public class SearchBooksVC extends JFrame
             public void stateChanged(ChangeEvent e)
             {
                 int index = tabbedPane.getSelectedIndex();
-                getSearchBukzTable().getSelectionModel().removeListSelectionListener(listSelectionListener()); // todo: delete
+//                getSearchBukzTable().getSelectionModel().removeListSelectionListener(listSelectionListener()); // todo: delete
                 removePanel();
                 ArrayList<Book> bukz;
 
@@ -127,7 +127,7 @@ public class SearchBooksVC extends JFrame
                         updateBooks(model_.getNewBooks());
                         break;
                 }
-                getSearchBukzTable().getSelectionModel().addListSelectionListener(listSelectionListener()); // todo: delete
+//                getSearchBukzTable().getSelectionModel().addListSelectionListener(listSelectionListener()); // todo: delete
 
 
             }
@@ -142,6 +142,7 @@ public class SearchBooksVC extends JFrame
 
     private void updateBooks(ArrayList<Book> bukz)
     {
+        System.out.println("update books");
         getSearchBukzTable().getSelectionModel().removeListSelectionListener(listSelectionListener());
         BookTableModel btm = new BookTableModel(bukz);
         updateSearch(btm);
@@ -200,9 +201,7 @@ public class SearchBooksVC extends JFrame
     private void search()
     {
         String searchText = getSearchTf().getText();
-        ArrayList<Book> bukz = model_.getBooksBySearching(searchText);
-        BookTableModel bookModel = new BookTableModel(bukz);
-        updateSearch(bookModel);
+        updateBooks(model_.getBooksBySearching(searchText));
     }
 
     private void removePanel()
@@ -210,7 +209,7 @@ public class SearchBooksVC extends JFrame
         JPanel panel = getBookPanel();
         if (panel.getParent() != null) {
             panel.getParent().remove(panel);
-            getSearchBukzTable().setModel(new DefaultTableModel());
+            //getSearchBukzTable().setModel(new DefaultTableModel());
         }
     }
 
@@ -278,6 +277,7 @@ public class SearchBooksVC extends JFrame
         table.setModel(bookTableModel);
         table.getSelectionModel().clearSelection();
         table.removeColumn(table.getColumnModel().getColumn(5));
+        getThumbArea().setText("");
     }
 
     // ok
