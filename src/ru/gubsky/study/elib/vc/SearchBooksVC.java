@@ -99,10 +99,14 @@ public class SearchBooksVC extends JFrame
             public void stateChanged(ChangeEvent e)
             {
                 int index = tabbedPane.getSelectedIndex();
+                getSearchBukzTable().getSelectionModel().removeListSelectionListener(listSelectionListener());
                 removePanel();
+                ArrayList<Book> bukz;
+                BookTableModel btm;
                 switch (index) {
                     case 0:
                         getSearchPanel().add(getBookPanel(), BorderLayout.CENTER);
+                        search();
                         break;
                     case 1:
                         break;
@@ -110,13 +114,18 @@ public class SearchBooksVC extends JFrame
                         break;
                     case 3:
                         getPopPanel().add(getBookPanel(), BorderLayout.CENTER);
-                        //ArrayList<Book> bukz = model_.getPopBooks();
-                        //BookTableModel btm = new BookTableModel(bukz);
-                        //updateSearch(btm);
+                        bukz = model_.getPopBooks();
+                        btm = new BookTableModel(bukz);
+                        updateSearch(btm);
                         break;
                     case 4:
+                        getNewsPanel().add(getBookPanel(), BorderLayout.CENTER);
+                        bukz = model_.getNewBooks();
+                        btm = new BookTableModel(bukz);
+                        updateSearch(btm);
                         break;
                 }
+                getSearchBukzTable().getSelectionModel().addListSelectionListener(listSelectionListener());
 
 
             }
@@ -129,6 +138,7 @@ public class SearchBooksVC extends JFrame
         setSearchButtonListener(searchButtonListener());
     }
 
+    // выбор новой книги в таблице
     private ListSelectionListener listSelListener;
     private ListSelectionListener listSelectionListener()
     {
@@ -160,6 +170,7 @@ public class SearchBooksVC extends JFrame
         return listSelListener;
     }
 
+    // поиск книги
     private ActionListener searchButtonListener()
     {
         ActionListener al = new ActionListener()
@@ -168,10 +179,7 @@ public class SearchBooksVC extends JFrame
             public void actionPerformed(ActionEvent e)
             {
                 getSearchBukzTable().getSelectionModel().removeListSelectionListener(listSelectionListener());
-                String searchText = getSearchTf().getText();
-                ArrayList<Book> bukz = model_.getBooksBySearching(searchText);
-                BookTableModel bookModel = new BookTableModel(bukz);
-                updateSearch(bookModel);
+                search();
                 getSearchBukzTable().getSelectionModel().addListSelectionListener(listSelectionListener());
             }
 
@@ -179,11 +187,20 @@ public class SearchBooksVC extends JFrame
         return al;
     }
 
+    private void search()
+    {
+        String searchText = getSearchTf().getText();
+        ArrayList<Book> bukz = model_.getBooksBySearching(searchText);
+        BookTableModel bookModel = new BookTableModel(bukz);
+        updateSearch(bookModel);
+    }
+
     private void removePanel()
     {
         JPanel panel = getBookPanel();
         if (panel.getParent() != null) {
             panel.getParent().remove(panel);
+            getSearchBukzTable().setModel(new DefaultTableModel());
         }
     }
 
@@ -295,9 +312,14 @@ public class SearchBooksVC extends JFrame
         return popPanel_;
     }
 
+    private JPanel newsPanel_;
     private JPanel getNewsPanel()
     {
-        return new JPanel();
+        if (newsPanel_ == null) {
+            newsPanel_ = new JPanel();
+            newsPanel_.setLayout(new BorderLayout());
+        }
+        return newsPanel_;
     }
 
 }

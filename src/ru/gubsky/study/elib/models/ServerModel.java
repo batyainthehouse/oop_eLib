@@ -20,7 +20,8 @@ public class ServerModel extends Thread
 {
     final static int OPERATION_SEARCH = 1;
     final static int OPERATION_ADD_VIEW = 2;
-        final static int OPERATION_POPULAR = 3;
+    final static int OPERATION_POPULAR = 3;
+    final static int OPERATION_NEWS = 4;
     private Socket sock_;
     private Connection conn_;
     private Statement stat_;
@@ -60,6 +61,9 @@ public class ServerModel extends Thread
                     break;
                 case OPERATION_POPULAR:
                     outObj = popularBooks();
+                    break;
+                case OPERATION_NEWS:
+                    outObj = newBooks();
                     break;
                 default:
                     break;
@@ -115,7 +119,7 @@ public class ServerModel extends Thread
         ps.setInt(1, id);
         ps.executeUpdate();
     }
-    
+
     private ArrayList<Book> popularBooks() throws SQLException
     {
         String query = "SELECT g.name as genre, a.name as author, b.name as title, "
@@ -123,7 +127,33 @@ public class ServerModel extends Thread
                 + "FROM book b, (SELECT * FROM genre) AS g, "
                 + "(SELECT * FROM author) AS a "
                 + "WHERE a.id = b.id_author and g.id = b.id_genre "
-                + "ORDER BY b.views DESC";
+                + "ORDER BY b.views DESC LIMIT 10";
+        PreparedStatement ps = conn_.prepareStatement(query);
+        ResultSet rs = ps.executeQuery();
+        ArrayList<Book> bukz = new ArrayList<>();
+        while (rs.next()) {
+            Book book = new Book();
+            book.author = rs.getString("author");
+            book.genre = rs.getString("genre");
+            book.id = rs.getInt("id");
+            System.out.println("id = " + book.id);
+            book.date = rs.getDate("date");
+            book.name = rs.getString("title");
+            book.text = rs.getString("text");
+            book.popularity = rs.getInt("views");
+            bukz.add(book);
+        }
+        return bukz;
+    }
+
+    private ArrayList<Book> newBooks() throws SQLException
+    {
+        String query = "SELECT g.name as genre, a.name as author, b.name as title, "
+                + "b.text as text, b.views as views, b.date as date, b.id as id "
+                + "FROM book b, (SELECT * FROM genre) AS g, "
+                + "(SELECT * FROM author) AS a "
+                + "WHERE a.id = b.id_author and g.id = b.id_genre "
+                + "ORDER BY b.date DESC LIMIT 10";
         PreparedStatement ps = conn_.prepareStatement(query);
         ResultSet rs = ps.executeQuery();
         ArrayList<Book> bukz = new ArrayList<>();

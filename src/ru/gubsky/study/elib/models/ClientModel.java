@@ -21,6 +21,7 @@ public class ClientModel
     final static int OPERATION_SEARCH = 1;
     final static int OPERATION_ADD_VIEW = 2;
     final static int OPERATION_POPULAR = 3;
+    final static int OPERATION_NEWS = 4;
     
     public ArrayList<Book> getBooksBySearching(String text)
     {
@@ -72,7 +73,6 @@ public class ClientModel
 
     public ArrayList<Book> getPopBooks()
     {
-
         ArrayList<Book> bukz = null;
         try {
             Socket sock = new Socket(HOST, PORT);
@@ -80,6 +80,31 @@ public class ClientModel
             // write
             ObjectOutputStream outStream = new ObjectOutputStream(sock.getOutputStream());
             outStream.writeInt(OPERATION_POPULAR);
+            outStream.flush();
+
+            // read
+            ObjectInputStream inStream = new ObjectInputStream(sock.getInputStream());
+            bukz = (ArrayList<Book>) inStream.readObject();
+
+            inStream.close();
+            outStream.close();
+            sock.close();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+        System.out.println("Client model: " + bukz);
+        return bukz;
+    }
+    
+    public ArrayList<Book> getNewBooks()
+    {
+        ArrayList<Book> bukz = null;
+        try {
+            Socket sock = new Socket(HOST, PORT);
+
+            // write
+            ObjectOutputStream outStream = new ObjectOutputStream(sock.getOutputStream());
+            outStream.writeInt(OPERATION_NEWS);
             outStream.flush();
 
             // read
